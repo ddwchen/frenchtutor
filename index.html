@@ -217,7 +217,7 @@ textarea::placeholder{color:var(--muted)}
   right: 0;
   bottom: 0;
   background: rgba(0,0,0,0.65);
-  z-index: 998;
+  z-index: 900;
 }
 .sidebar-backdrop.show { display: block; }
 
@@ -250,7 +250,7 @@ textarea::placeholder{color:var(--muted)}
     bottom: 0;
     width: 82%;
     max-width: 310px;
-    z-index: 999;
+    z-index: 1001;
     transform: translateX(-105%);
     -webkit-transform: translateX(-105%);
     transition: transform 0.25s ease;
@@ -260,10 +260,14 @@ textarea::placeholder{color:var(--muted)}
     background: var(--surface);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    pointer-events: none;
+    visibility: hidden;
   }
   .sidebar.open {
     transform: translateX(0) !important;
     -webkit-transform: translateX(0) !important;
+    pointer-events: auto;
+    visibility: visible;
   }
 
   .panel { width: 100%; grid-column: 1; }
@@ -401,7 +405,8 @@ textarea::placeholder{color:var(--muted)}
 
   /* Typography for smaller screens */
   .sb-lbl { font-size: 0.54rem; }
-  .ni { font-size: 0.88rem; padding: 0.6rem 0.7rem; min-height: 38px; }
+  .ni { font-size: 0.88rem; padding: 0.6rem 0.7rem; min-height: 38px; color: var(--text); }
+  .ni:not(.active) .ndot { opacity: 0.75; }
   .lesson-note, .gaps-list { font-size: 0.78rem; line-height: 1.7; }
 }
 
