@@ -38,6 +38,7 @@ header { position:relative;z-index:20;display:flex;align-items:center;justify-co
 .sb-s { padding:1rem 1rem 0.5rem; }
 .sb-lbl { font-family:'Inconsolata',monospace;font-size:0.57rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.55rem; }
 .ni { display:flex;align-items:center;gap:0.55rem;padding:0.48rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.81rem;font-weight:300;color:var(--muted);transition:all 0.15s;margin-bottom:0.12rem;border:1px solid transparent; }
+.ni-btn { width:100%; background:transparent; text-align:left; font-family:inherit; }
 .ni:hover{color:var(--text);background:var(--surface2)}
 .ni.active{color:var(--accent);background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.14)}
 .ndot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.5}
@@ -434,10 +435,10 @@ textarea::placeholder{color:var(--muted)}
   <nav class="sidebar">
     <div class="sb-s">
       <div class="sb-lbl">Mode</div>
-      <div class="ni active" id="nav-chat" data-view="chat" onclick="showView('chat',this)"><div class="ndot"></div>Conversation</div>
-      <div class="ni" id="nav-drill" data-view="drill" onclick="showView('drill',this)"><div class="ndot"></div>Drill rapide</div>
-      <div class="ni" id="nav-vocab" data-view="vocab" onclick="showView('vocab',this)"><div class="ndot"></div>Vocabulaire</div>
-      <div class="ni" id="nav-tcf" data-view="tcf" onclick="showView('tcf',this)"><div class="ndot"></div>Examen TCF</div>
+      <button type="button" class="ni ni-btn active" id="nav-chat" data-view="chat"><div class="ndot"></div>Conversation</button>
+      <button type="button" class="ni ni-btn" id="nav-drill" data-view="drill"><div class="ndot"></div>Drill rapide</button>
+      <button type="button" class="ni ni-btn" id="nav-vocab" data-view="vocab"><div class="ndot"></div>Vocabulaire</button>
+      <button type="button" class="ni ni-btn" id="nav-tcf" data-view="tcf"><div class="ndot"></div>Examen TCF</button>
     </div>
     <div class="div-l"></div>
     <div class="sb-s">
@@ -1140,6 +1141,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   sidebar.addEventListener('click', handleNavTap, { passive: false });
   sidebar.addEventListener('touchend', handleNavTap, { passive: false });
+  sidebar.querySelectorAll('.ni[data-view]').forEach(function(item) {
+    item.addEventListener('touchstart', function(ev) {
+      ev.stopPropagation();
+    }, { passive: true });
+  });
 });
 
 loadDrill();
