@@ -260,15 +260,14 @@ textarea::placeholder{color:var(--muted)}
     background: var(--surface);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    pointer-events: none;
-    visibility: hidden;
+    pointer-events: auto;
+    visibility: visible;
   }
   .sidebar.open {
     transform: translateX(0) !important;
     -webkit-transform: translateX(0) !important;
-    pointer-events: auto;
-    visibility: visible;
   }
+  .sidebar .ni { position: relative; z-index: 1002; }
 
   .panel { width: 100%; grid-column: 1; }
 
@@ -849,10 +848,19 @@ async function send() {
       body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:SYS, messages:history })
     });
     const d = await r.json();
-    const reply = d.content?.[0]?.text || 'Erreur.';
+    if (!r.ok || d.error) {
+      const errText = d?.error?.message || d?.error || ('HTTP ' + r.status);
+      throw new Error(errText);
+    }
+    const reply = d.content?.[0]?.text;
+    if (!reply) throw new Error('Réponse vide du serveur');
     history.push({ role:'assistant', content:reply });
     showTyping(false); addMsg('assistant', reply);
-  } catch { showTyping(false); addMsg('assistant','Erreur de connexion. Réessaie.'); }
+  } catch (e) {
+    showTyping(false);
+    const msg = e && e.message ? e.message : 'Erreur de connexion. Réessaie.';
+    addMsg('assistant', 'Erreur: ' + msg);
+  }
   btn.disabled = false;
   document.getElementById('inp').focus();
 }
@@ -996,13 +1004,16 @@ async function generateTCF() {
       })
     });
     var data = await res.json();
+    if (!res.ok || data.error) {
+      throw new Error(data?.error?.message || data?.error || ('HTTP ' + res.status));
+    }
     var raw = data.content && data.content[0] ? data.content[0].text : '';
     var clean = raw.replace(/```json/g, '').replace(/```/g, '').trim();
     var json = JSON.parse(clean);
     if (tcfMode === 'reading') renderReading(json);
     else renderWriting(json);
   } catch(e) {
-    card.innerHTML = '<div class="tcf-placeholder"><div class="tcf-ph-text" style="color:var(--warn)">Erreur de génération. Réessaie.</div></div>';
+    card.innerHTML = '<div class="tcf-placeholder"><div class="tcf-ph-text" style="color:var(--warn)">Erreur de génération: ' + (e && e.message ? e.message : 'Réessaie.') + '</div></div>';
     console.error(e);
   }
   btn.disabled = false;
@@ -1096,14 +1107,35 @@ async function submitWriting() {
       })
     });
     var data = await res.json();
+    if (!res.ok || data.error) {
+      throw new Error(data?.error?.message || data?.error || ('HTTP ' + res.status));
+    }
     var feedback = data.content && data.content[0] ? data.content[0].text : 'Erreur.';
     fb.innerHTML = '<div class="score-line">Correction de l\'examinateur</div>' + fmt(feedback);
     if (submitBtn) submitBtn.textContent = 'Soumis ✓';
   } catch(e) {
-    fb.innerHTML = 'Erreur de connexion.';
+    fb.innerHTML = 'Erreur: ' + (e && e.message ? e.message : 'Connexion');
     if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Soumettre pour correction'; }
   }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  var navMap = [
+    { id: 'nav-chat', view: 'chat' },
+    { id: 'nav-drill', view: 'drill' },
+    { id: 'nav-vocab', view: 'vocab' },
+    { id: 'nav-tcf', view: 'tcf' }
+  ];
+  navMap.forEach(function(item) {
+    var el = document.getElementById(item.id);
+    if (!el) return;
+    el.addEventListener('click', function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      showView(item.view, el);
+    });
+  });
+});
 
 loadDrill();
 loadVocab();
