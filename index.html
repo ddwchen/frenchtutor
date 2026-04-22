@@ -434,10 +434,10 @@ textarea::placeholder{color:var(--muted)}
   <nav class="sidebar">
     <div class="sb-s">
       <div class="sb-lbl">Mode</div>
-      <div class="ni active" id="nav-chat" onclick="showView('chat',this)"><div class="ndot"></div>Conversation</div>
-      <div class="ni" id="nav-drill" onclick="showView('drill',this)"><div class="ndot"></div>Drill rapide</div>
-      <div class="ni" id="nav-vocab" onclick="showView('vocab',this)"><div class="ndot"></div>Vocabulaire</div>
-      <div class="ni" id="nav-tcf" onclick="showView('tcf',this)"><div class="ndot"></div>Examen TCF</div>
+      <div class="ni active" id="nav-chat" data-view="chat" onclick="showView('chat',this)"><div class="ndot"></div>Conversation</div>
+      <div class="ni" id="nav-drill" data-view="drill" onclick="showView('drill',this)"><div class="ndot"></div>Drill rapide</div>
+      <div class="ni" id="nav-vocab" data-view="vocab" onclick="showView('vocab',this)"><div class="ndot"></div>Vocabulaire</div>
+      <div class="ni" id="nav-tcf" data-view="tcf" onclick="showView('tcf',this)"><div class="ndot"></div>Examen TCF</div>
     </div>
     <div class="div-l"></div>
     <div class="sb-s">
@@ -601,6 +601,7 @@ textarea::placeholder{color:var(--muted)}
 // SYSTEM PROMPT — incorporates all tutor notes
 // ══════════════════════════════════════════════════════════════
 const SYS = window.APP_CONTENT.SYS;
+const CHAT_MODEL = 'claude-3-5-sonnet-latest';
 
 // ══════════════════════════════════════════════════════════════
 // MOBILE SIDEBAR TOGGLE
@@ -845,7 +846,7 @@ async function send() {
   try {
     const r = await fetch('/api/claude', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:SYS, messages:history })
+      body: JSON.stringify({ model: CHAT_MODEL, max_tokens:1000, system:SYS, messages:history })
     });
     const d = await r.json();
     if (!r.ok || d.error) {
@@ -997,7 +998,7 @@ async function generateTCF() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: CHAT_MODEL,
         max_tokens: 1000,
         system: sysprompt,
         messages: [{ role: 'user', content: userMsg }]
@@ -1097,7 +1098,7 @@ async function submitWriting() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: CHAT_MODEL,
         max_tokens: 600,
         system: TCF_FEEDBACK_SYS,
         messages: [{
@@ -1120,21 +1121,19 @@ async function submitWriting() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  var navMap = [
-    { id: 'nav-chat', view: 'chat' },
-    { id: 'nav-drill', view: 'drill' },
-    { id: 'nav-vocab', view: 'vocab' },
-    { id: 'nav-tcf', view: 'tcf' }
-  ];
-  navMap.forEach(function(item) {
-    var el = document.getElementById(item.id);
-    if (!el) return;
-    el.addEventListener('click', function(ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      showView(item.view, el);
-    });
-  });
+  var sidebar = document.querySelector('.sidebar');
+  if (!sidebar) return;
+
+  function handleNavTap(ev) {
+    var item = ev.target.closest('.ni[data-view]');
+    if (!item) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    showView(item.getAttribute('data-view'), item);
+  }
+
+  sidebar.addEventListener('click', handleNavTap, { passive: false });
+  sidebar.addEventListener('touchend', handleNavTap, { passive: false });
 });
 
 loadDrill();
