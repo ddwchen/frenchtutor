@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Professeur · TCF Canada</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Inconsolata:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f14;
+  --surface: #17171f;
+  --surface2: #1e1e28;
+  --border: rgba(180,160,255,0.12);
+  --accent: #a78bfa;
+  --accent2: #6ee7b7;
+  --warn: #f87171;
+  --text: #e8e4f0;
+  --muted: #6b6880;
+  --gold: #d4af70;
+  --gold-dim: rgba(212,175,112,0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: 'Jost', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+body::before { content:''; position:fixed; top:-20%;left:-10%;width:60%;height:60%; background:radial-gradient(ellipse,rgba(167,139,250,0.04) 0%,transparent 70%); pointer-events:none;z-index:0; }
+body::after { content:''; position:fixed; bottom:-20%;right:-10%;width:50%;height:50%; background:radial-gradient(ellipse,rgba(110,231,183,0.03) 0%,transparent 70%); pointer-events:none;z-index:0; }
+
+header { position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:1rem 1.75rem;border-bottom:1px solid var(--border);background:rgba(15,15,20,0.88);backdrop-filter:blur(8px); }
+.logo { font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--accent); }
+.header-right { display:flex;align-items:center;gap:0.75rem; }
+.level-badge { font-family:'Inconsolata',monospace;font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(212,175,112,0.25);padding:0.25rem 0.7rem;border-radius:2px; }
+.exam-cd { font-family:'Inconsolata',monospace;font-size:0.63rem;letter-spacing:0.1em;color:var(--muted); }
+
+.app { position:relative;z-index:10;flex:1;display:grid;grid-template-columns:220px 1fr;height:calc(100vh - 57px); }
+
+/* SIDEBAR */
+.sidebar { border-right:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;overflow-y:auto; }
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:var(--border)}
+.sb-s { padding:1rem 1rem 0.5rem; }
+.sb-lbl { font-family:'Inconsolata',monospace;font-size:0.57rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:0.55rem; }
+.ni { display:flex;align-items:center;gap:0.55rem;padding:0.48rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.81rem;font-weight:300;color:var(--muted);transition:all 0.15s;margin-bottom:0.12rem;border:1px solid transparent; }
+.ni:hover{color:var(--text);background:var(--surface2)}
+.ni.active{color:var(--accent);background:rgba(167,139,250,0.08);border-color:rgba(167,139,250,0.14)}
+.ndot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:0.5}
+.ni.active .ndot{opacity:1}
+.div-l{height:1px;background:var(--border);margin:0.5rem 1rem}
+.prog-box{margin:0.75rem 1rem;padding:0.65rem 0.75rem;background:var(--surface2);border:1px solid var(--border);border-radius:4px}
+.prog-lbl{font-family:'Inconsolata',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem}
+.prog-bg{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s ease}
+.prog-pct{font-family:'Inconsolata',monospace;font-size:0.63rem;color:var(--accent);margin-top:0.3rem;text-align:right}
+.gaps-list{font-size:0.73rem;color:var(--muted);line-height:1.7;padding:0 0.1rem 0.5rem}
+.lesson-note{font-size:0.72rem;color:var(--muted);line-height:1.6;padding:0 0.1rem 0.5rem}
+.lesson-note strong{color:var(--gold);font-weight:500}
+
+/* PANEL */
+.panel{display:flex;flex-direction:column;overflow:hidden}
+.view{display:none;flex-direction:column;flex:1;overflow:hidden}
+.view.active{display:flex}
+
+/* CHAT */
+.chat-top{padding:0.85rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.chat-ttl{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--text)}
+.lesson-tag{font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(212,175,112,0.2);padding:0.2rem 0.6rem;border-radius:2px}
+.chips{display:flex;flex-wrap:wrap;gap:0.38rem;padding:0.65rem 1.5rem;border-bottom:1px solid var(--border);background:rgba(23,23,31,0.5)}
+.chip{font-family:'Inconsolata',monospace;font-size:0.61rem;letter-spacing:0.07em;padding:0.26rem 0.65rem;border-radius:2px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.chip:hover{color:var(--accent);border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.05)}
+.chip.gold{border-color:rgba(212,175,112,0.25);color:var(--gold)}
+.chip.gold:hover{background:rgba(212,175,112,0.08)}
+
+.messages{flex:1;overflow-y:auto;padding:1.2rem 1.5rem;display:flex;flex-direction:column;gap:1rem}
+.messages::-webkit-scrollbar{width:3px}.messages::-webkit-scrollbar-thumb{background:var(--border)}
+.msg{display:flex;gap:0.7rem;animation:rise 0.22s ease forwards;opacity:0}
+.msg.user{flex-direction:row-reverse}
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.msg-av{width:27px;height:27px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;margin-top:3px}
+.msg.assistant .msg-av{background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.2);color:var(--accent);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem}
+.msg.user .msg-av{background:rgba(110,231,183,0.08);border:1px solid rgba(110,231,183,0.15);color:var(--accent2);font-size:0.63rem;font-family:'Inconsolata',monospace}
+.msg-body{max-width:78%;padding:0.78rem 1rem;border-radius:4px;font-size:0.87rem;line-height:1.72}
+.msg.assistant .msg-body{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+.msg.user .msg-body{background:rgba(110,231,183,0.07);border:1px solid rgba(110,231,183,0.12)}
+.msg-body strong{color:var(--accent);font-weight:500}
+.msg-body em{color:var(--gold);font-style:italic}
+.ok-t{color:var(--accent2)}.err-t{color:var(--warn)}
+.typing{display:flex;gap:4px;padding:4px 0;align-items:center}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 1.1s infinite;opacity:0.3}
+.typing span:nth-child(2){animation-delay:0.18s}.typing span:nth-child(3){animation-delay:0.36s}
+@keyframes pulse{40%{opacity:1;transform:scale(1.2)}}
+.input-area{padding:0.8rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:0.7rem;align-items:flex-end;background:var(--surface)}
+textarea{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.62rem 0.88rem;color:var(--text);font-family:'Jost',sans-serif;font-size:0.87rem;resize:none;outline:none;min-height:40px;max-height:120px;line-height:1.5;transition:border-color 0.2s}
+textarea:focus{border-color:rgba(167,139,250,0.35)}
+textarea::placeholder{color:var(--muted)}
+.send-btn{background:var(--accent);color:#0f0f14;border:none;padding:0.58rem 1.1rem;border-radius:4px;font-family:'Inconsolata',monospace;font-size:0.67rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-weight:500;transition:opacity 0.2s;flex-shrink:0}
+.send-btn:hover{opacity:0.85}.send-btn:disabled{opacity:0.35;cursor:not-allowed}
+
+/* VOCAB */
+.vocab-view{flex:1;overflow-y:auto;padding:1.25rem 1.5rem}
+.vocab-view::-webkit-scrollbar{width:3px}.vocab-view::-webkit-scrollbar-thumb{background:var(--border)}
+.v-section{margin-bottom:1.75rem}
+.v-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;color:var(--accent);margin-bottom:0.2rem}
+.v-sub{font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.72rem}
+.v-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:0.38rem}
+.v-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.48rem 0.72rem;font-size:0.8rem;cursor:pointer;transition:all 0.15s;position:relative}
+.v-card:hover{border-color:rgba(167,139,250,0.25);background:var(--surface2)}
+.v-card.mastered{border-color:rgba(110,231,183,0.3)}
+.v-card.mastered::after{content:'✓';position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);font-size:0.68rem;color:var(--accent2)}
+.v-tip{font-size:0.77rem;color:var(--muted);margin-bottom:1rem;font-style:italic}
+
+/* DRILL */
+.drill-wrap{flex:1;display:flex;flex-direction:column;padding:1.2rem 1.5rem;gap:0.9rem;overflow-y:auto}
+.d-stats{display:flex;gap:1rem}
+.dstat{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:0.55rem 1rem;text-align:center;flex:1}
+.dstat-n{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--accent);line-height:1}
+.dstat-l{font-family:'Inconsolata',monospace;font-size:0.57rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.18rem}
+.d-topics{display:flex;flex-wrap:wrap;gap:0.38rem}
+.tbtn{font-family:'Inconsolata',monospace;font-size:0.61rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.27rem 0.72rem;border-radius:2px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.tbtn.active{color:var(--accent);border-color:rgba(167,139,250,0.35);background:rgba(167,139,250,0.07)}
+.tbtn:hover:not(.active){color:var(--text)}
+.tbtn.gold-btn{border-color:rgba(212,175,112,0.25);color:var(--gold)}
+.tbtn.gold-btn.active{background:rgba(212,175,112,0.08)}
+.d-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.75rem;text-align:center;position:relative;overflow:hidden;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.9rem}
+.d-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.d-cat{font-family:'Inconsolata',monospace;font-size:0.61rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+.d-q{font-family:'Cormorant Garamond',serif;font-size:1.45rem;line-height:1.48;color:var(--text);max-width:520px}
+.d-hint-wrap{display:flex;flex-direction:column;align-items:center;gap:0.4rem}
+.hint-btn{background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.25rem 0.85rem;border-radius:2px;font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.15s}
+.hint-btn:hover{color:var(--text);border-color:rgba(180,160,255,0.25)}
+.d-hint{font-size:0.77rem;color:var(--muted);font-style:italic}
+.d-inp-row{display:flex;gap:0.6rem;max-width:420px;width:100%}
+.d-inp{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.62rem 1rem;color:var(--text);font-family:'Jost',sans-serif;font-size:0.93rem;text-align:center;outline:none;transition:border-color 0.2s}
+.d-inp:focus{border-color:rgba(167,139,250,0.4)}
+.d-inp.ok{border-color:rgba(110,231,183,0.5);background:rgba(110,231,183,0.05)}
+.d-inp.bad{border-color:rgba(248,113,113,0.5);background:rgba(248,113,113,0.04)}
+.chk-btn{background:var(--accent);color:#0f0f14;border:none;padding:0.62rem 1.2rem;border-radius:4px;font-family:'Inconsolata',monospace;font-size:0.67rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-weight:500;transition:opacity 0.2s}
+.chk-btn:hover{opacity:0.85}
+.d-fb{max-width:480px;width:100%;padding:0.72rem 1rem;border-radius:4px;font-size:0.83rem;line-height:1.65;display:none}
+.d-fb.ok{display:block;background:rgba(110,231,183,0.07);border:1px solid rgba(110,231,183,0.2);color:#86efac}
+.d-fb.bad{display:block;background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);color:#fca5a5}
+.nxt-btn{display:none;background:transparent;border:1px solid var(--border);color:var(--accent);padding:0.52rem 1.4rem;border-radius:4px;font-family:'Inconsolata',monospace;font-size:0.63rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.15s}
+.nxt-btn.show{display:inline-block}
+.nxt-btn:hover{background:rgba(167,139,250,0.07)}
+
+/* TCF EXAM VIEW */
+.tcf-wrap{flex:1;display:flex;flex-direction:column;padding:1.2rem 1.5rem;gap:0.9rem;overflow-y:auto}
+.tcf-top-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.6rem}
+.tcf-new-btn{font-family:'Inconsolata',monospace;font-size:0.67rem;letter-spacing:0.12em;text-transform:uppercase;background:var(--accent);color:#0f0f14;border:none;padding:0.45rem 1.1rem;border-radius:4px;cursor:pointer;font-weight:500;transition:opacity 0.2s;white-space:nowrap}
+.tcf-new-btn:hover{opacity:0.85}
+.tcf-new-btn:disabled{opacity:0.4;cursor:not-allowed}
+.tcf-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.75rem;flex:1;display:flex;flex-direction:column;gap:1.1rem;position:relative;overflow:hidden;min-height:300px}
+.tcf-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.tcf-placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.6rem;text-align:center}
+.tcf-ph-icon{font-size:1.8rem;color:var(--border)}
+.tcf-ph-text{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--muted)}
+.tcf-ph-text strong{color:var(--accent)}
+.tcf-ph-sub{font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);opacity:0.6}
+.tcf-loading{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem}
+.tcf-spinner{width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tcf-loading-txt{font-family:'Inconsolata',monospace;font-size:0.63rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted)}
+.tcf-meta{display:flex;align-items:center;gap:0.75rem}
+.tcf-badge{font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.22rem 0.65rem;border-radius:2px;border:1px solid var(--border);color:var(--gold);background:var(--gold-dim)}
+.tcf-skill{font-family:'Inconsolata',monospace;font-size:0.6rem;letter-spacing:0.1em;color:var(--muted)}
+.tcf-passage{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;font-size:0.88rem;line-height:1.8;color:var(--text);font-style:italic}
+.tcf-passage strong{color:var(--accent);font-style:normal}
+.tcf-question{font-family:'Cormorant Garamond',serif;font-size:1.15rem;line-height:1.5;color:var(--text)}
+.tcf-options{display:flex;flex-direction:column;gap:0.4rem}
+.tcf-opt{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.65rem 1rem;font-size:0.87rem;cursor:pointer;transition:all 0.15s;text-align:left;color:var(--text);font-family:'Jost',sans-serif}
+.tcf-opt:hover:not(:disabled){border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.05)}
+.tcf-opt.correct{border-color:rgba(110,231,183,0.5);background:rgba(110,231,183,0.08);color:#86efac}
+.tcf-opt.wrong{border-color:rgba(248,113,113,0.4);background:rgba(248,113,113,0.06);color:#fca5a5}
+.tcf-opt:disabled{cursor:default}
+.tcf-explanation{background:rgba(212,175,112,0.07);border:1px solid rgba(212,175,112,0.2);border-radius:4px;padding:0.75rem 1rem;font-size:0.84rem;line-height:1.65;color:var(--gold-light,#e8d5a0);display:none}
+.tcf-explanation.show{display:block}
+.tcf-prompt{font-family:'Cormorant Garamond',serif;font-size:1.1rem;line-height:1.55;color:var(--text)}
+.tcf-prompt em{color:var(--gold);font-style:italic}
+.tcf-instructions{font-size:0.8rem;color:var(--muted);line-height:1.6;font-style:italic}
+.tcf-textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.8rem 1rem;color:var(--text);font-family:'Jost',sans-serif;font-size:0.88rem;resize:vertical;outline:none;min-height:140px;line-height:1.65;transition:border-color 0.2s}
+.tcf-textarea:focus{border-color:rgba(167,139,250,0.35)}
+.tcf-textarea::placeholder{color:var(--muted)}
+.tcf-submit-row{display:flex;align-items:center;gap:1rem}
+.tcf-submit{background:var(--accent);color:#0f0f14;border:none;padding:0.6rem 1.3rem;border-radius:4px;font-family:'Inconsolata',monospace;font-size:0.67rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-weight:500;transition:opacity 0.2s}
+.tcf-submit:hover{opacity:0.85}
+.tcf-submit:disabled{opacity:0.35;cursor:not-allowed}
+.tcf-wordcount{font-family:'Inconsolata',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.08em}
+.tcf-feedback{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;font-size:0.86rem;line-height:1.72;color:var(--text);display:none}
+.tcf-feedback.show{display:block}
+.tcf-feedback strong{color:var(--accent)}
+.tcf-feedback .score-line{font-family:'Inconsolata',monospace;font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);margin-bottom:0.5rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Mon Professeur</div>
+  <div class="header-right">
+    <div class="level-badge" id="lvl-badge">NCLC 1 · Thème 1</div>
+    <div class="exam-cd" id="cd"></div>
+  </div>
+</header>
+
+<div class="app">
+  <nav class="sidebar">
+    <div class="sb-s">
+      <div class="sb-lbl">Mode</div>
+      <div class="ni active" id="nav-chat" onclick="showView('chat',this)"><div class="ndot"></div>Conversation</div>
+      <div class="ni" id="nav-drill" onclick="showView('drill',this)"><div class="ndot"></div>Drill rapide</div>
+      <div class="ni" id="nav-vocab" onclick="showView('vocab',this)"><div class="ndot"></div>Vocabulaire</div>
+      <div class="ni" id="nav-tcf" onclick="showView('tcf',this)"><div class="ndot"></div>Examen TCF</div>
+    </div>
+    <div class="div-l"></div>
+    <div class="sb-s">
+      <div class="sb-lbl">Programme NCLC</div>
+      <div class="ni active" id="nt1" onclick="setTheme('t1',this)"><div class="ndot"></div>1 · Identité</div>
+      <div class="ni" id="nt2" onclick="setTheme('t2',this)"><div class="ndot"></div>2 · Famille</div>
+      <div class="ni" style="opacity:0.3;cursor:default"><div class="ndot"></div>3–12 · À venir</div>
+    </div>
+    <div class="prog-box">
+      <div class="prog-lbl">Vocab drill · score</div>
+      <div class="prog-bg"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="prog-pct" id="prog-pct">—</div>
+    </div>
+    <div class="div-l"></div>
+    <div class="sb-s">
+      <div class="sb-lbl">Notes · Cours du 15/04</div>
+      <div class="lesson-note">
+        <strong>Règle d'or :</strong> adjectif avec chaque nom, adverbe avec chaque verbe<br><br>
+        <strong>Adverbes :</strong> adj-e → +ment (rare→rarement) · sinon fém+ment (doux→doucement) · exceptions: gentil→gentiment, bref→brièvement<br><br>
+        <strong>Cause :</strong> parce que · car (milieu) · comme/puisque (début, raison évidente)<br><br>
+        <strong>Nuances :</strong> poser vs reposer · trouver vs se trouver · jouer à vs jouer de
+      </div>
+    </div>
+    <div class="div-l"></div>
+    <div class="sb-s">
+      <div class="sb-lbl">Lacunes prioritaires</div>
+      <div class="gaps-list">Articles partitifs (du/de la/de)<br>Pronoms COD / COI<br>Accord adj. féminin<br>PC avec être (accord)<br>Subjonctif vs conditionnel<br>Pronoms relatifs<br>Adverbes de manière<br>Démonstratifs</div>
+    </div>
+  </nav>
+
+  <div class="panel">
+
+    <!-- CHAT -->
+    <div class="view active" id="view-chat">
+      <div class="chat-top">
+        <div class="chat-ttl">Conversation libre &amp; correction TCF</div>
+        <div class="lesson-tag">Cours du 15/04 · Salutations</div>
+      </div>
+      <div class="chips">
+        <div class="chip gold" onclick="chip('Pratiquons le scénario du cours : Thomas Dupont et Julien Moreau se rencontrent par hasard près d\'un café à Lyon en fin d\'après-midi. Joue le rôle de Julien et commençons le dialogue. Corrige mes erreurs.')">🎭 Scénario cours : Thomas &amp; Julien</div>
+        <div class="chip gold" onclick="chip('Je vais me présenter comme Élise Morel à un cours de français pour adultes à Toulouse. Pose-moi les questions d\'un professeur en premier cours. Corrige mon français.')">🎭 Scénario : Se présenter (Élise)</div>
+        <div class="chip gold" onclick="chip('Pratiquons les adverbes de manière. Donne-moi 8 adjectifs et je dois former l\'adverbe correspondant. Commence.')">Adverbes de manière</div>
+        <div class="chip" onclick="chip('Explique-moi la différence entre parce que, car, comme et puisque avec des exemples.')">Parce que / car / puisque</div>
+        <div class="chip" onclick="chip('Explique-moi les pronoms relatifs qui, que, dont, où, lequel, duquel, auquel avec des exemples simples.')">Pronoms relatifs</div>
+        <div class="chip" onclick="chip('Explique-moi l\'accord du participe passé : avec être, avec avoir, et les verbes réfléchis. Donne des exemples pour chaque règle.')">Accord participe passé</div>
+        <div class="chip" onclick="chip('Corrige mon français comme un examinateur TCF. Je vais écrire un paragraphe.')">Correction TCF</div>
+        <div class="chip" onclick="chip('Pose-moi une question d\'expression orale typique du TCF Canada niveau B1-B2. Je dois décrire, donner mon opinion, et argumenter.')">Question orale TCF</div>
+        <div class="chip" onclick="chip('Explique-moi la différence entre l\'indicatif, le conditionnel et le subjonctif avec des exemples simples.')">Indicatif/Conditionnel/Subjonctif</div>
+      </div>
+      <div class="messages" id="msgs"></div>
+      <div class="input-area">
+        <textarea id="inp" placeholder="Écris en français… ou pose une question en anglais" rows="1" onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+        <button class="send-btn" id="send-btn" onclick="send()">Envoyer</button>
+      </div>
+    </div>
+
+    <!-- DRILL -->
+    <div class="view" id="view-drill">
+      <div class="drill-wrap">
+        <div class="d-stats">
+          <div class="dstat"><div class="dstat-n" id="ds-ok">0</div><div class="dstat-l">Correct</div></div>
+          <div class="dstat"><div class="dstat-n" id="ds-tot">0</div><div class="dstat-l">Total</div></div>
+          <div class="dstat"><div class="dstat-n" id="ds-pct">—</div><div class="dstat-l">Score</div></div>
+        </div>
+        <div class="d-topics">
+          <button class="tbtn gold-btn active" data-t="lesson" onclick="pickTopic(this)">★ Cours 15/04</button>
+          <button class="tbtn" data-t="nclc1" onclick="pickTopic(this)">NCLC 1 · Identité</button>
+          <button class="tbtn" data-t="nclc2" onclick="pickTopic(this)">NCLC 2 · Famille</button>
+          <button class="tbtn" data-t="articles" onclick="pickTopic(this)">Articles / Partitifs</button>
+          <button class="tbtn" data-t="adverbes" onclick="pickTopic(this)">Adverbes</button>
+          <button class="tbtn" data-t="relatifs" onclick="pickTopic(this)">Pronoms relatifs</button>
+          <button class="tbtn" data-t="conj" onclick="pickTopic(this)">Conjugaison</button>
+          <button class="tbtn" data-t="pronoms" onclick="pickTopic(this)">COD / COI</button>
+          <button class="tbtn" data-t="mixed" onclick="pickTopic(this)">Mixte</button>
+        </div>
+        <div class="d-card">
+          <div class="d-cat" id="d-cat">Chargement…</div>
+          <div class="d-q" id="d-q">—</div>
+          <div class="d-hint-wrap">
+            <button class="hint-btn" id="hint-btn" onclick="showHint()">Indice ?</button>
+            <div class="d-hint" id="d-hint" style="display:none"></div>
+          </div>
+          <div class="d-inp-row">
+            <input class="d-inp" id="d-inp" type="text" placeholder="Ta réponse…" onkeydown="drillKey(event)">
+            <button class="chk-btn" onclick="checkDrill()">Vérifier</button>
+          </div>
+          <div class="d-fb" id="d-fb"></div>
+          <button class="nxt-btn" id="nxt-btn" onclick="nextDrill()">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOCAB DRILL -->
+    <div class="view" id="view-vocab">
+      <div class="drill-wrap">
+        <div class="d-stats">
+          <div class="dstat"><div class="dstat-n" id="vs-ok">0</div><div class="dstat-l">Correct</div></div>
+          <div class="dstat"><div class="dstat-n" id="vs-tot">0</div><div class="dstat-l">Total</div></div>
+          <div class="dstat"><div class="dstat-n" id="vs-pct">—</div><div class="dstat-l">Score</div></div>
+        </div>
+        <div class="d-topics">
+          <button class="tbtn gold-btn active" data-vt="both" onclick="pickVocabTopic(this)">Tout</button>
+          <button class="tbtn" data-vt="t1" onclick="pickVocabTopic(this)">NCLC 1 · Identité</button>
+          <button class="tbtn" data-vt="t2" onclick="pickVocabTopic(this)">NCLC 2 · Famille</button>
+        </div>
+        <div class="d-card">
+          <div class="d-cat" id="v-cat">Vocabulaire</div>
+          <div class="d-q" id="v-q">—</div>
+          <div class="d-hint-wrap">
+            <button class="hint-btn" id="v-hint-btn" onclick="showVocabHint()">Indice ?</button>
+            <div class="d-hint" id="v-hint" style="display:none"></div>
+          </div>
+          <div class="d-inp-row">
+            <input class="d-inp" id="v-inp" type="text" placeholder="En français…" onkeydown="vocabKey(event)">
+            <button class="chk-btn" onclick="checkVocab()">Vérifier</button>
+          </div>
+          <div class="d-fb" id="v-fb"></div>
+          <button class="nxt-btn" id="v-nxt" onclick="nextVocab()">Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+  <!-- TCF EXAM -->
+    <div class="view" id="view-tcf">
+      <div class="tcf-wrap">
+        <div class="tcf-top-row">
+          <div class="d-topics">
+            <button class="tbtn gold-btn active" data-mode="reading" onclick="pickTCF(this)">Compréhension écrite</button>
+            <button class="tbtn" data-mode="writing" onclick="pickTCF(this)">Expression écrite</button>
+          </div>
+          <button class="tcf-new-btn" id="tcf-new-btn" onclick="generateTCF()">Nouvelle question →</button>
+        </div>
+        <div class="tcf-card" id="tcf-card">
+          <div class="tcf-placeholder">
+            <div class="tcf-ph-icon">✦</div>
+            <div class="tcf-ph-text">Clique sur <strong>Nouvelle question</strong> pour commencer</div>
+            <div class="tcf-ph-sub">Questions générées en temps réel · calibrées NCLC 1-2</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="content.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════
+// SYSTEM PROMPT — incorporates all tutor notes
+// ══════════════════════════════════════════════════════════════
+const SYS = window.APP_CONTENT.SYS;
+
+// ══════════════════════════════════════════════════════════════
+// VOCAB
+// ══════════════════════════════════════════════════════════════
+const VOCAB = {
+  t1: {
+    title: 'Thème 1 · Identité et Interactions sociales',
+    level: 'NCLC 1',
+    sections: [
+      { label: 'Salutations', words: ['Bonjour','Bonsoir','Salut','Allô','Bienvenue','Au revoir','À demain','À plus tard','À plus','À bientôt','Bonne journée','Bonne soirée','Bonne nuit'] },
+      { label: 'Formules de politesse', words: ["S'il vous plaît","S'il te plaît","Merci","Merci beaucoup","De rien","Je vous en prie","Pardon","Excusez-moi","Excuse-moi","Désolé / Désolée","Oui","Non","D'accord"] },
+      { label: "État d'esprit", words: ["Comment ça va ?","Ça va ?","Comment allez-vous ?","Comment vas-tu ?","Et vous ? / Et toi ?","Ça va","Ça va bien","Très bien, merci","Pas mal","Comme ci, comme ça","Ça va mal"] },
+      { label: 'Identité personnelle', words: ["Le nom","Le prénom","L'âge","Un an / Des ans","La date de naissance","Un homme / Une femme","Un garçon / Une fille","Monsieur / Madame","Mademoiselle","Célibataire","Marié(e)","Séparé(e)","Divorcé(e)","Veuf / Veuve"] },
+      { label: 'Origine et Langue', words: ["Le pays","La ville","La nationalité","La province","La langue maternelle","Canadien(ne)","Français(e)","Le français","L'anglais"] },
+      { label: 'Verbes essentiels', words: ["Être","Avoir","S'appeler","Habiter","Venir","Parler"] },
+      { label: 'Questions mémorisées', words: ["Comment vous appelez-vous ?","Quel est votre nom ?","Quel âge avez-vous ?","Quelle est votre nationalité ?","D'où venez-vous ?","Quel est votre pays d'origine ?","Où habitez-vous ?","Parlez-vous français ?","Quel est votre état civil ?"] },
+      { label: 'Expressions du cours', words: ["se rencontrer par hasard","près d'un café","en fin d'après-midi","en fin de soirée","en fin de journée","leurs projets pour le soir","prendre congé","chacun part de son côté","l'un d'entre eux","à propos de / au sujet de"] },
+    ]
+  },
+  t2: {
+    title: 'Thème 2 · La Famille et les Relations',
+    level: 'NCLC 2',
+    sections: [
+      { label: 'Famille proche', words: ["La famille","Les parents","Le père","La mère","Le papa / La maman","Le mari","L'époux / L'épouse","Le couple"] },
+      { label: 'Enfants et fratrie', words: ["L'enfant / Les enfants","Le fils / La fille","Le frère / La sœur","Le bébé","Le jumeau / La jumelle"] },
+      { label: 'Famille élargie', words: ["Les grands-parents","Le grand-père / La grand-mère","Le petit-fils / La petite-fille","Les petits-enfants","L'oncle / La tante","Le cousin / La cousine","Le neveu / La nièce"] },
+      { label: 'Belle-famille', words: ["Le beau-père / La belle-mère","Le beau-frère / La belle-sœur"] },
+      { label: 'Foyer et animaux', words: ["Le foyer","L'animal de compagnie","Le chien","Le chat","L'oiseau","Le poisson"] },
+      { label: 'Verbes essentiels', words: ["Vivre","Aimer","Grandir","Garder"] },
+    ]
+  }
+};
+
+// ══════════════════════════════════════════════════════════════
+// DRILLS — including lesson-specific content
+// ══════════════════════════════════════════════════════════════
+const DRILLS = window.APP_CONTENT.DRILLS;
+
+function allDrills() { return Object.values(DRILLS).flat(); }
+
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let history = [];
+let topic = 'lesson';
+let currentDrill = null;
+let ok = 0, tot = 0;
+
+let currentTheme = 't1';
+
+// ══════════════════════════════════════════════════════════════
+// COUNTDOWN
+// ══════════════════════════════════════════════════════════════
+(function() {
+  const days = Math.ceil((new Date('2026-05-30') - new Date()) / 86400000);
+  document.getElementById('cd').textContent = `TCF Canada dans ${days} jours`;
+})();
+
+// ══════════════════════════════════════════════════════════════
+// VIEW
+// ══════════════════════════════════════════════════════════════
+function showView(name, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('#nav-chat,#nav-drill,#nav-vocab,#nav-tcf').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  if (name === 'vocab') loadVocab();
+}
+
+function setTheme(t, el) {
+  currentTheme = t;
+  document.querySelectorAll('#nt1,#nt2').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('lvl-badge').textContent = t === 't1' ? 'NCLC 1 · Thème 1' : 'NCLC 2 · Thème 2';
+  
+}
+
+// ══════════════════════════════════════════════════════════════
+// VOCAB
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+// VOCAB DRILL — English → French
+// ══════════════════════════════════════════════════════════════
+
+// Vocabulary groups — each group has one English prompt and a list of ALL acceptable French answers
+// This way "see you later" correctly accepts both "à plus tard" AND "à bientôt" (and variants)
+const VOCAB_GROUPS = window.APP_CONTENT.VOCAB_GROUPS;
+
+// Build flat vocab pools from groups
+function getVocabPool(theme) {
+  if (theme === 'both') return VOCAB_GROUPS;
+  return VOCAB_GROUPS.filter(g => g.theme === theme);
+}
+
+let vocabTopic = 'both';
+let currentVocab = null;
+let vok = 0, vtot = 0;
+
+function pickVocabTopic(btn) {
+  document.querySelectorAll('[data-vt]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  vocabTopic = btn.dataset.vt;
+  loadVocab();
+}
+
+function showVocabHint() {
+  document.getElementById('v-hint').style.display = 'block';
+  document.getElementById('v-hint-btn').style.display = 'none';
+}
+
+function loadVocab() {
+  const pool = getVocabPool(vocabTopic);
+  currentVocab = pool[Math.floor(Math.random() * pool.length)];
+  const levelLabel = currentVocab.theme === 't1' ? 'NCLC 1' : 'NCLC 2';
+  document.getElementById('v-cat').textContent = currentVocab.label + ' · ' + levelLabel;
+  document.getElementById('v-q').textContent = currentVocab.en;
+  // Hint: first letter of shortest accepted answer
+  const shortest = currentVocab.fr.reduce((a,b) => a.length <= b.length ? a : b);
+  document.getElementById('v-hint').textContent = 'Commence par : ' + shortest[0].toUpperCase();
+  document.getElementById('v-hint').style.display = 'none';
+  document.getElementById('v-hint-btn').style.display = 'inline-block';
+  const inp = document.getElementById('v-inp');
+  inp.value = ''; inp.className = 'd-inp';
+  document.getElementById('v-fb').className = 'd-fb';
+  document.getElementById('v-fb').textContent = '';
+  document.getElementById('v-nxt').classList.remove('show');
+  inp.focus();
+}
+
+function checkVocab() {
+  const inp = document.getElementById('v-inp');
+  const val = inp.value.trim(); if (!val) return;
+  // Accept ANY of the valid French translations
+  const accepted = currentVocab.fr;
+  const isOk = accepted.some(a => norm(val) === norm(a));
+  vtot++;
+  const fb = document.getElementById('v-fb');
+  // Show all acceptable answers so user learns alternatives
+  const allAnswers = accepted.slice(0, 4).join(' · ');
+  if (isOk) {
+    vok++;
+    inp.classList.add('ok');
+    fb.className = 'd-fb ok';
+    fb.innerHTML = '✓ Correct ! <strong>' + val + '</strong>' +
+      (accepted.length > 1 ? '<div style="margin-top:0.4rem;font-size:0.78rem;color:var(--muted);font-style:italic">Aussi accepté : ' + accepted.filter(a => norm(a) !== norm(val)).slice(0,3).join(' · ') + '</div>' : '');
+  } else {
+    inp.classList.add('bad');
+    fb.className = 'd-fb bad';
+    fb.innerHTML = '✗ Réponses acceptées : <strong>' + allAnswers + '</strong>';
+  }
+  document.getElementById('vs-ok').textContent = vok;
+  document.getElementById('vs-tot').textContent = vtot;
+  const vpct = Math.round((vok/vtot)*100);
+  document.getElementById('vs-pct').textContent = vpct + '%';
+  document.getElementById('prog-fill').style.width = vpct + '%';
+  document.getElementById('prog-pct').textContent = vpct + '%';
+  document.getElementById('v-nxt').classList.add('show');
+}
+
+function nextVocab() { loadVocab(); }
+
+function vocabKey(e) {
+  if (e.key === 'Enter')
+    document.getElementById('v-nxt').classList.contains('show') ? nextVocab() : checkVocab();
+}
+
+// ══════════════════════════════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════════════════════════════
+function addMsg(role, text) {
+  const box = document.getElementById('msgs');
+  const w = document.createElement('div'); w.className = 'msg ' + role;
+  const av = document.createElement('div'); av.className = 'msg-av';
+  av.textContent = role === 'assistant' ? 'P' : 'D';
+  const b = document.createElement('div'); b.className = 'msg-body';
+  b.innerHTML = fmt(text);
+  w.appendChild(av); w.appendChild(b);
+  box.appendChild(w);
+  box.scrollTop = box.scrollHeight;
+}
+
+function fmt(t) {
+  return t
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/❌([^→\n]+)→\s*✅([^—\n]+)(?:—([^\n]+))?/g,
+      '<span class="err-t">❌$1</span>→ <span class="ok-t">✅$2</span><span style="color:var(--muted);font-size:0.81em"> — $3</span>')
+    .replace(/\n/g, '<br>');
+}
+
+function showTyping(on) {
+  if (on) {
+    const box = document.getElementById('msgs');
+    const w = document.createElement('div'); w.className='msg assistant'; w.id='typ';
+    const av = document.createElement('div'); av.className='msg-av'; av.textContent='P';
+    const b = document.createElement('div'); b.className='msg-body';
+    b.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+    w.appendChild(av); w.appendChild(b); box.appendChild(w); box.scrollTop=box.scrollHeight;
+  } else {
+    const t = document.getElementById('typ'); if (t) t.remove();
+  }
+}
+
+async function send() {
+  const inp = document.getElementById('inp');
+  const btn = document.getElementById('send-btn');
+  const txt = inp.value.trim();
+  if (!txt || btn.disabled) return;
+  inp.value = ''; inp.style.height = 'auto';
+  addMsg('user', txt);
+  history.push({ role:'user', content:txt });
+  btn.disabled = true; showTyping(true);
+  try {
+    const r = await fetch('/api/claude', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:SYS, messages:history })
+    });
+    const d = await r.json();
+    const reply = d.content?.[0]?.text || 'Erreur.';
+    history.push({ role:'assistant', content:reply });
+    showTyping(false); addMsg('assistant', reply);
+  } catch { showTyping(false); addMsg('assistant','Erreur de connexion. Réessaie.'); }
+  btn.disabled = false;
+  document.getElementById('inp').focus();
+}
+
+function chip(t) {
+  document.getElementById('inp').value = t;
+  showView('chat', document.getElementById('nav-chat'));
+  send();
+}
+
+function onKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); send(); } }
+function resize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
+
+// ══════════════════════════════════════════════════════════════
+// INIT MESSAGE
+// ══════════════════════════════════════════════════════════════
+addMsg('assistant', `Bonjour Diana ! Session du jour chargée.
+
+J'ai intégré tes **deux sessions avec ton tuteur** (31/03 et 15/04). Voici ce qui est nouveau :
+
+**Cours du 15/04 :** la règle d'or (adjectif + nom, adverbe + verbe), les adverbes de manière (doux→doucement, gentil→*gentiment*, bref→*brièvement*), les connecteurs de cause (parce que / car / comme / puisque), et les 4 scénarios du Thème 1.
+
+Les drills **"Cours 15/04"** sont maintenant le premier onglet. Tu peux aussi pratiquer directement les scénarios Thomas &amp; Julien ou Élise avec les boutons en or ci-dessus.
+
+Par où tu veux commencer ?`);
+
+// ══════════════════════════════════════════════════════════════
+// DRILL
+// ══════════════════════════════════════════════════════════════
+function pickTopic(btn) {
+  document.querySelectorAll('.tbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  topic = btn.dataset.t;
+  loadDrill();
+}
+
+function showHint() {
+  document.getElementById('d-hint').style.display = 'block';
+  document.getElementById('hint-btn').style.display = 'none';
+}
+
+function loadDrill() {
+  const pool = topic === 'mixed' ? allDrills() : (DRILLS[topic] || allDrills());
+  currentDrill = pool[Math.floor(Math.random() * pool.length)];
+  document.getElementById('d-cat').textContent = currentDrill.cat;
+  document.getElementById('d-q').textContent = currentDrill.q;
+  document.getElementById('d-hint').textContent = currentDrill.hint;
+  document.getElementById('d-hint').style.display = 'none';
+  document.getElementById('hint-btn').style.display = 'inline-block';
+  const inp = document.getElementById('d-inp');
+  inp.value = ''; inp.className = 'd-inp';
+  document.getElementById('d-fb').className = 'd-fb';
+  document.getElementById('d-fb').textContent = '';
+  document.getElementById('nxt-btn').classList.remove('show');
+  inp.focus();
+}
+
+function norm(s) {
+  return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/['']/g,"'");
+}
+
+function checkDrill() {
+  const inp = document.getElementById('d-inp');
+  const val = inp.value.trim(); if (!val) return;
+  const correct = currentDrill.a;
+  const answers = [correct, ...correct.split('/').map(s => s.trim())];
+  if (correct.includes('(e)')) { answers.push(correct.replace('(e)',''), correct.replace('(e)','e')); }
+  const isOk = answers.some(a => norm(val) === norm(a));
+  tot++;
+  const fb = document.getElementById('d-fb');
+  if (isOk) {
+    ok++;
+    inp.classList.add('ok');
+    fb.className = 'd-fb ok';
+    fb.innerHTML = `✓ Correct ! <strong>${correct}</strong>`;
+  } else {
+    inp.classList.add('bad');
+    fb.className = 'd-fb bad';
+    fb.innerHTML = `✗ Réponse attendue : <strong>${correct}</strong>`;
+  }
+  document.getElementById('ds-ok').textContent = ok;
+  document.getElementById('ds-tot').textContent = tot;
+  document.getElementById('ds-pct').textContent = Math.round((ok/tot)*100) + '%';
+  document.getElementById('nxt-btn').classList.add('show');
+}
+
+function nextDrill() { loadDrill(); }
+function drillKey(e) {
+  if (e.key === 'Enter')
+    document.getElementById('nxt-btn').classList.contains('show') ? nextDrill() : checkDrill();
+}
+
+
+
+// ══════════════════════════════════════════════════════════════
+// TCF EXAM — AI-generated reading & writing questions
+// ══════════════════════════════════════════════════════════════
+let tcfMode = 'reading';
+let tcfAnswered = false;
+let currentWritingQ = null;
+
+const TCF_SYS_READING = 'You generate TCF Canada reading comprehension questions calibrated to NCLC 1-2 (A1-A2 level).\n\nGenerate a short authentic-style text (40-80 words) on one of these everyday topics: greetings, personal identity, family, shopping, directions, schedules, signs, notices, simple forms, or social interactions. Then write one multiple-choice question with 4 options (A, B, C, D). Exactly one answer is correct.\n\nRespond ONLY with valid JSON, no markdown, no preamble:\n{\n  "skill": "one of: Salutations | Identite | Famille | Commerces | Directions | Administration | Vie quotidienne",\n  "passage": "the French text",\n  "question": "the question in French",\n  "options": ["A. ...", "B. ...", "C. ...", "D. ..."],\n  "correct": "A or B or C or D",\n  "explanation": "Brief explanation in English of why the correct answer is right and why the others are wrong"\n}';
+
+const TCF_SYS_WRITING = 'You generate TCF Canada writing prompts calibrated to NCLC 1-2 (A1-A2 level).\n\nGenerate a realistic short writing task. The task should ask for 30-60 words and be from one of these contexts: filling a simple form, writing a short note/message, responding to an invitation, leaving a message for a neighbor/colleague, writing a brief description of yourself or your family.\n\nRespond ONLY with valid JSON, no markdown, no preamble:\n{\n  "skill": "one of: Message | Formulaire | Note | Description | Invitation",\n  "context": "1-2 sentence setup in French explaining the situation",\n  "prompt": "The writing task instruction in French",\n  "word_target": 40,\n  "model_answer": "A model A2-level response in French",\n  "scoring_criteria": "3-4 criteria the evaluator checks, in English, comma-separated"\n}';
+
+const TCF_FEEDBACK_SYS = 'You are a TCF Canada examiner giving feedback on a student written response. The student is Diana, an English speaker targeting CLB 7+. She is currently practicing at NCLC 1-2 level to build foundations.\n\nEvaluate her response on: task completion, grammar (especially articles, adjective agreement, verb tenses), vocabulary (could she enrich with adjectives/adverbs per the regle d or?), coherence and register.\n\nFormat: start with X/10 score. Then 3-5 specific observations using the format [ERREUR] error -> [CORRECT] correction where relevant. End with one encouragement and one focus point. Under 200 words. Strict but kind. No em dashes.';
+
+function pickTCF(btn) {
+  document.querySelectorAll('[data-mode]').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  tcfMode = btn.dataset.mode;
+  var card = document.getElementById('tcf-card');
+  card.innerHTML = '<div class="tcf-placeholder"><div class="tcf-ph-icon">✦</div><div class="tcf-ph-text">Clique sur <strong>Nouvelle question</strong> pour commencer</div><div class="tcf-ph-sub">Questions générées en temps réel · calibrées NCLC 1-2</div></div>';
+}
+
+async function generateTCF() {
+  var btn = document.getElementById('tcf-new-btn');
+  btn.disabled = true;
+  tcfAnswered = false;
+  var card = document.getElementById('tcf-card');
+  card.innerHTML = '<div class="tcf-loading"><div class="tcf-spinner"></div><div class="tcf-loading-txt">Génération en cours…</div></div>';
+
+  try {
+    var sysprompt = tcfMode === 'reading' ? TCF_SYS_READING : TCF_SYS_WRITING;
+    var userMsg = tcfMode === 'reading'
+      ? 'Generate a new NCLC 1-2 reading comprehension question. Vary the topic from previous ones.'
+      : 'Generate a new NCLC 1-2 writing prompt. Vary the context from previous ones.';
+
+    var res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: sysprompt,
+        messages: [{ role: 'user', content: userMsg }]
+      })
+    });
+    var data = await res.json();
+    var raw = data.content && data.content[0] ? data.content[0].text : '';
+    var clean = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+    var json = JSON.parse(clean);
+    if (tcfMode === 'reading') renderReading(json);
+    else renderWriting(json);
+  } catch(e) {
+    card.innerHTML = '<div class="tcf-placeholder"><div class="tcf-ph-text" style="color:var(--warn)">Erreur de génération. Réessaie.</div></div>';
+    console.error(e);
+  }
+  btn.disabled = false;
+}
+
+function renderReading(q) {
+  var card = document.getElementById('tcf-card');
+  var optHtml = '';
+  for (var i = 0; i < q.options.length; i++) {
+    var letter = ['A','B','C','D'][i];
+    optHtml += '<button class="tcf-opt" data-letter="' + letter + '" data-correct="' + q.correct + '" onclick="answerReading(this)">' + q.options[i] + '</button>';
+  }
+  card.innerHTML =
+    '<div class="tcf-meta">' +
+      '<div class="tcf-badge">NCLC 1-2 · Compréhension écrite</div>' +
+      '<div class="tcf-skill">' + q.skill + '</div>' +
+    '</div>' +
+    '<div class="tcf-passage">' + q.passage.replace(/\n/g, '<br>') + '</div>' +
+    '<div class="tcf-question">' + q.question + '</div>' +
+    '<div class="tcf-options">' + optHtml + '</div>' +
+    '<div class="tcf-explanation" id="tcf-expl">' + q.explanation + '</div>';
+}
+
+function answerReading(btn) {
+  if (tcfAnswered) return;
+  tcfAnswered = true;
+  var chosen = btn.dataset.letter;
+  var correct = btn.dataset.correct;
+  document.querySelectorAll('.tcf-opt').forEach(function(b) {
+    b.disabled = true;
+    if (b.dataset.letter === correct) b.classList.add('correct');
+    else if (b.dataset.letter === chosen && chosen !== correct) b.classList.add('wrong');
+  });
+  var expl = document.getElementById('tcf-expl');
+  if (expl) expl.classList.add('show');
+}
+
+function renderWriting(q) {
+  currentWritingQ = q;
+  var card = document.getElementById('tcf-card');
+  card.innerHTML =
+    '<div class="tcf-meta">' +
+      '<div class="tcf-badge">NCLC 1-2 · Expression écrite</div>' +
+      '<div class="tcf-skill">' + q.skill + '</div>' +
+    '</div>' +
+    '<div class="tcf-passage">' + q.context + '</div>' +
+    '<div class="tcf-prompt">' + q.prompt + '</div>' +
+    '<div class="tcf-instructions">Objectif : environ ' + q.word_target + ' mots. Critères : ' + q.scoring_criteria + '.</div>' +
+    '<textarea class="tcf-textarea" id="tcf-ans" placeholder="Écris ta réponse ici…" oninput="updateWordCount(this)"></textarea>' +
+    '<div class="tcf-submit-row">' +
+      '<button class="tcf-submit" id="tcf-sub-btn" onclick="submitWriting()">Soumettre pour correction</button>' +
+      '<span class="tcf-wordcount" id="tcf-wc">0 mot(s)</span>' +
+    '</div>' +
+    '<div class="tcf-feedback" id="tcf-wfb"></div>';
+}
+
+function updateWordCount(el) {
+  var words = el.value.trim() ? el.value.trim().split(/\s+/).length : 0;
+  var wc = document.getElementById('tcf-wc');
+  if (wc) wc.textContent = words + ' mot(s)';
+}
+
+async function submitWriting() {
+  var q = currentWritingQ;
+  if (!q) return;
+  var ansEl = document.getElementById('tcf-ans');
+  var ans = ansEl ? ansEl.value.trim() : '';
+  if (!ans || ans.split(/\s+/).length < 5) {
+    alert('Écris au moins quelques phrases avant de soumettre !');
+    return;
+  }
+  var submitBtn = document.getElementById('tcf-sub-btn');
+  if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Correction…'; }
+
+  var fb = document.getElementById('tcf-wfb');
+  fb.innerHTML = '<div style="display:flex;align-items:center;gap:0.6rem"><div class="tcf-spinner"></div><span style="font-size:0.8rem;color:var(--muted)">Analyse en cours…</span></div>';
+  fb.classList.add('show');
+
+  try {
+    var res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: TCF_FEEDBACK_SYS,
+        messages: [{
+          role: 'user',
+          content: 'WRITING PROMPT:\n' + q.prompt + '\n\nCONTEXT:\n' + q.context + '\n\nMODEL ANSWER (for reference only, do not share with student):\n' + q.model_answer + '\n\nSTUDENT RESPONSE:\n' + ans
+        }]
+      })
+    });
+    var data = await res.json();
+    var feedback = data.content && data.content[0] ? data.content[0].text : 'Erreur.';
+    fb.innerHTML = '<div class="score-line">Correction de l\'examinateur</div>' + fmt(feedback);
+    if (submitBtn) submitBtn.textContent = 'Soumis ✓';
+  } catch(e) {
+    fb.innerHTML = 'Erreur de connexion.';
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Soumettre pour correction'; }
+  }
+}
+
+loadDrill();
+loadVocab();
+</script>
+</body>
+</html>
