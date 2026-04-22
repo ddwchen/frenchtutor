@@ -64,6 +64,37 @@ Key concepts introduced:
 
 - "one of them": l'un d'entre eux / l'un des deux/trois
 
+═══ TUTOR NOTES — Session 22/04/2026 ═══
+Topic: Demander des nouvelles (asking for news / checking in with someone)
+
+Key phrases and patterns:
+- Comment s'est passé ta matinée ? / ta journée ? / ta semaine ? / ton rdv ? / ton entretien ?
+- Comment s'est passée ta matinée ? → agreement with feminine subject (matinée, soirée, journée, semaine → passée with extra e)
+- Comment s'est passé ton rendez-vous ? / ton entretien ? → masculine subject, no extra e
+
+Verb distinction (IMPORTANT):
+- passer quelque chose = to spend (time), to pass (something): "j'ai passé une bonne journée"
+- se passer = to happen, to go (as in "how did it go"): "ça s'est bien passé"
+
+Dialogue template:
+- A: Ça va ? Comment s'est passée ta semaine ?
+- B: C'était bien → C'est bien ! → Ma semaine s'est très bien passée ! Et toi ?
+- A: Moi ça va.
+
+Register progression (same idea, 3 levels):
+- Basic: C'était bien
+- Present tense: C'est bien !
+- Full reflexive construction with adverb: Ma semaine s'est très bien passée !
+
+Introducing what you want to ask (soft opener / reported question):
+- En fait, je voulais te demander si... (if)
+- En fait, je voulais te demander comment... (how)
+- En fait, je voulais te demander ce que... (what)
+
+Casual "what have you been up to?":
+- Qu'est-ce que tu as fait de beau ?
+- Response: Je suis allée... / J'ai... (first person past with agreement for women: je suis allée NOT je suis allé)
+
 ═══ NCLC 1 — Thème 1: Identité et Interactions sociales ═══
 Vocabulary: Salutations (Bonjour, Bonsoir, Salut, Allô, Bienvenue, Au revoir, À demain, À plus tard, À bientôt, Bonne journée, Bonne soirée, Bonne nuit), Politesse (S'il vous plaît/S'il te plaît, Merci/Merci beaucoup, De rien, Je vous en prie, Pardon, Excusez-moi/Excuse-moi, Désolé/Désolée, Oui/Non/D'accord), État d'esprit (Comment ça va?/Très bien/Pas mal/Comme ci comme ça/Ça va mal), Identité (nom/prénom/âge/date de naissance, homme/femme/garçon/fille, Monsieur/Madame/Mademoiselle, état civil: célibataire/marié(e)/séparé(e)/divorcé(e)/veuf-veuve), Origine (pays/ville/nationalité/province/langue maternelle, Canadien(ne)/Français(e)/le français/l'anglais), Verbes essentiels: être/avoir/s'appeler/habiter/venir/parler
 Grammar: pronoms sujets, présent indicatif (-er verbs, être, avoir), interrogation de base
@@ -103,7 +134,22 @@ Do NOT use em dashes in responses. Respond primarily in French; explain grammar 
 
 window.APP_CONTENT.DRILLS = {
   lesson: [
-    // Adverb formation (15/04 lesson)
+    // ═══ Cours 22/04 · Demander des nouvelles ═══
+    { cat:'Cours 22/04 · Demander', q:"Comment dit-on 'How did your week go?' (informal) →", a:"Comment s'est passée ta semaine", hint:"semaine = féminin → passée" },
+    { cat:'Cours 22/04 · Demander', q:"Comment dit-on 'How was your morning?' →", a:"Comment s'est passée ta matinée", hint:"matinée = féminin → passée" },
+    { cat:'Cours 22/04 · Demander', q:"Comment dit-on 'How was your interview?' →", a:"Comment s'est passé ton entretien", hint:"entretien = masculin → passé (pas de e)" },
+    { cat:'Cours 22/04 · Demander', q:"Comment dit-on 'How was your appointment?' →", a:"Comment s'est passé ton rendez-vous", hint:"rendez-vous = masculin → passé (pas de e)" },
+    { cat:'Cours 22/04 · Accord', q:"Comment s'est ___ (passer) ta journée ?", a:"passée", hint:"journée = fém. → passée avec -e" },
+    { cat:'Cours 22/04 · Accord', q:"Comment s'est ___ (passer) ton week-end ?", a:"passé", hint:"week-end = masc. → passé sans -e" },
+    { cat:'Cours 22/04 · Dialogue', q:"Réponds au niveau le plus avancé : 'Ma semaine ___ très bien ___.' (se passer, passé composé)", a:"s'est / passée", hint:"réflexif avec être → accord avec semaine (fém.)" },
+    { cat:'Cours 22/04 · Verbes', q:"'To spend a good day' (passer un moment) →", a:"passer une bonne journée", hint:"passer qqch = to spend/pass (time)" },
+    { cat:'Cours 22/04 · Verbes', q:"'It went well' (se passer bien) →", a:"ça s'est bien passé", hint:"se passer = to happen/go" },
+    { cat:'Cours 22/04 · Opener', q:"Traduis : 'Actually, I wanted to ask you if...' →", a:"En fait, je voulais te demander si", hint:"soft opener + si/comment/ce que" },
+    { cat:'Cours 22/04 · Opener', q:"Traduis : 'Actually, I wanted to ask you what...' →", a:"En fait, je voulais te demander ce que", hint:"ce que = what (reported)" },
+    { cat:'Cours 22/04 · Casual', q:"Traduis : 'What have you been up to?' (casual, informal) →", a:"Qu'est-ce que tu as fait de beau", hint:"expression idiomatique" },
+    { cat:'Cours 22/04 · Passé composé', q:"Pour Diana (femme) : 'I went to Paris' →", a:"Je suis allée à Paris", hint:"aller → être + accord féminin (allée)" },
+
+    // ═══ Cours 15/04 · Adverbes ═══
     { cat:'Cours 15/04 · Adverbes', q:"Formez l'adverbe : rare →", a:"rarement", hint:"adj en -e → +ment directement" },
     { cat:'Cours 15/04 · Adverbes', q:"Formez l'adverbe : doux →", a:"doucement", hint:"doux → douce → doucement" },
     { cat:'Cours 15/04 · Adverbes', q:"Formez l'adverbe : gentil →", a:"gentiment", hint:"exception ! gentil → gentiment (pas gentillement)" },
@@ -291,6 +337,23 @@ window.APP_CONTENT.VOCAB_GROUPS = [
   { theme:'t1', label:'Questions mémorisées', en:'Do you speak French? (formal)', fr:['parlez-vous français','parlez-vous français ?','parlez-vous francais','parlez-vous francais ?'] },
   { theme:'t1', label:'Questions mémorisées', en:'Do you speak English? (formal)', fr:['parlez-vous anglais','parlez-vous anglais ?'] },
   { theme:'t1', label:'Questions mémorisées', en:'What is your marital status?', fr:['quel est votre état civil','quel est votre état civil ?','quel est votre etat civil','quel est votre etat civil ?'] },
+
+  // ─── T1 · Lesson vocabulary (15/04) ───
+  { theme:'t1', label:'Cours 22/04 · Demander', en:'How did your week go? (informal)', fr:["comment s'est passée ta semaine","comment s'est passée ta semaine ?","comment s est passee ta semaine"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:'How was your morning? (informal)', fr:["comment s'est passée ta matinée","comment s'est passée ta matinée ?","comment s est passee ta matinee"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:'How was your day? (informal)', fr:["comment s'est passée ta journée","comment s'est passée ta journée ?","comment s est passee ta journee"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:'How was your interview? (informal)', fr:["comment s'est passé ton entretien","comment s'est passé ton entretien ?","comment s est passe ton entretien"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:'How was your appointment? (informal)', fr:["comment s'est passé ton rendez-vous","comment s'est passé ton rdv","comment s est passe ton rendez-vous"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:'My week went really well!', fr:["ma semaine s'est très bien passée","ma semaine s est tres bien passee"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:'It was good (past, basic)', fr:["c'était bien","cetait bien","c etait bien"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:"What have you been up to? (casual)", fr:["qu'est-ce que tu as fait de beau","qu'est-ce que tu as fait de beau ?","quest-ce que tu as fait de beau"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:"Actually, I wanted to ask you if...", fr:["en fait, je voulais te demander si","en fait je voulais te demander si"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:"Actually, I wanted to ask you how...", fr:["en fait, je voulais te demander comment","en fait je voulais te demander comment"] },
+  { theme:'t1', label:'Cours 22/04 · Demander', en:"Actually, I wanted to ask you what...", fr:["en fait, je voulais te demander ce que","en fait je voulais te demander ce que"] },
+  { theme:'t1', label:'Cours 22/04 · Verbes', en:"To spend (time) / To pass (something)", fr:["passer"] },
+  { theme:'t1', label:'Cours 22/04 · Verbes', en:"To happen / To go (as in 'how did it go')", fr:["se passer"] },
+  { theme:'t1', label:'Cours 22/04 · Verbes', en:"An appointment", fr:["un rendez-vous","le rendez-vous","rendez-vous","un rdv","rdv"] },
+  { theme:'t1', label:'Cours 22/04 · Verbes', en:"An interview (job, formal)", fr:["un entretien","l'entretien","entretien"] },
 
   // ─── T1 · Lesson vocabulary (15/04) ───
   { theme:'t1', label:'Expressions du cours', en:'To run into each other by chance', fr:['se rencontrer par hasard','se croiser par hasard','tomber sur'] },

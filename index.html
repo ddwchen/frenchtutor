@@ -185,17 +185,230 @@ textarea::placeholder{color:var(--muted)}
 .tcf-feedback.show{display:block}
 .tcf-feedback strong{color:var(--accent)}
 .tcf-feedback .score-line{font-family:'Inconsolata',monospace;font-size:0.72rem;letter-spacing:0.08em;color:var(--gold);margin-bottom:0.5rem}
+
+/* ════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — targets phones ≤768px
+   ════════════════════════════════════════════════════════════════ */
+
+/* Hamburger menu button (hidden on desktop) */
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--accent);
+  width: 38px;
+  height: 38px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Backdrop for mobile sidebar */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 15;
+  backdrop-filter: blur(2px);
+}
+.sidebar-backdrop.show { display: block; }
+
+@media (max-width: 768px) {
+  header {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
+  .logo { font-size: 1.1rem; }
+  .level-badge { font-size: 0.58rem; padding: 0.2rem 0.55rem; }
+  .exam-cd { display: none; }
+
+  .mobile-menu-btn { display: flex; }
+
+  .app {
+    grid-template-columns: 1fr;
+    height: calc(100vh - 57px);
+    height: calc(100dvh - 57px);
+  }
+
+  /* Sidebar slides in from left on mobile */
+  .sidebar {
+    position: fixed;
+    top: 57px;
+    left: 0;
+    bottom: 0;
+    width: 80%;
+    max-width: 300px;
+    z-index: 16;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    border-right: 1px solid var(--border);
+    box-shadow: 2px 0 20px rgba(0,0,0,0.4);
+  }
+  .sidebar.open { transform: translateX(0); }
+
+  .panel { width: 100%; }
+
+  /* Chat view mobile */
+  .chat-top {
+    padding: 0.65rem 1rem;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-start;
+  }
+  .chat-ttl { font-size: 0.95rem; }
+  .lesson-tag { font-size: 0.55rem; padding: 0.15rem 0.5rem; }
+
+  .chips {
+    padding: 0.55rem 1rem;
+    gap: 0.3rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    font-size: 0.68rem;
+    padding: 0.35rem 0.7rem;
+    flex-shrink: 0;
+  }
+
+  .messages {
+    padding: 1rem;
+    gap: 0.85rem;
+  }
+  .msg-body {
+    max-width: 88%;
+    padding: 0.72rem 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+  .msg-av { width: 30px; height: 30px; }
+
+  .input-area {
+    padding: 0.7rem 0.85rem;
+    gap: 0.5rem;
+  }
+  textarea {
+    font-size: 16px; /* 16px prevents iOS zoom on focus */
+    padding: 0.7rem 0.9rem;
+    min-height: 44px;
+  }
+  .send-btn {
+    font-size: 0.7rem;
+    padding: 0.7rem 0.9rem;
+    min-height: 44px;
+  }
+
+  /* Drill view mobile */
+  .drill-wrap, .tcf-wrap {
+    padding: 0.9rem 1rem;
+    gap: 0.7rem;
+  }
+  .d-stats { gap: 0.5rem; }
+  .dstat { padding: 0.5rem 0.4rem; }
+  .dstat-n { font-size: 1.35rem; }
+
+  .d-topics, .tcf-top-row .d-topics {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    padding-bottom: 0.2rem;
+  }
+  .d-topics::-webkit-scrollbar { display: none; }
+  .tbtn {
+    font-size: 0.64rem;
+    padding: 0.38rem 0.8rem;
+    flex-shrink: 0;
+    min-height: 32px;
+  }
+
+  .d-card {
+    padding: 1.4rem 1rem;
+    min-height: 280px;
+  }
+  .d-cat { font-size: 0.6rem; }
+  .d-q { font-size: 1.3rem; line-height: 1.4; }
+  .d-hint { font-size: 0.8rem; }
+  .d-inp {
+    font-size: 16px; /* prevents iOS zoom */
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+  .chk-btn, .hint-btn, .nxt-btn {
+    font-size: 0.7rem;
+    padding: 0.7rem 1.1rem;
+    min-height: 40px;
+  }
+  .d-fb { font-size: 0.88rem; padding: 0.7rem 0.85rem; }
+
+  /* TCF mobile */
+  .tcf-top-row { flex-direction: column; align-items: stretch; gap: 0.6rem; }
+  .tcf-new-btn {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    min-height: 42px;
+  }
+  .tcf-card { padding: 1.2rem 1rem; }
+  .tcf-passage {
+    font-size: 0.92rem;
+    padding: 0.85rem 1rem;
+    line-height: 1.7;
+  }
+  .tcf-question { font-size: 1.05rem; }
+  .tcf-prompt { font-size: 1rem; }
+  .tcf-opt {
+    font-size: 0.92rem;
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+  }
+  .tcf-textarea {
+    font-size: 16px; /* prevents iOS zoom */
+    min-height: 120px;
+    padding: 0.8rem 0.95rem;
+  }
+  .tcf-submit-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.55rem;
+  }
+  .tcf-submit {
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+    font-size: 0.7rem;
+  }
+  .tcf-wordcount { text-align: right; }
+  .tcf-feedback { padding: 0.85rem 0.95rem; font-size: 0.88rem; }
+
+  /* Typography for smaller screens */
+  .sb-lbl { font-size: 0.54rem; }
+  .ni { font-size: 0.88rem; padding: 0.6rem 0.7rem; min-height: 38px; }
+  .lesson-note, .gaps-list { font-size: 0.78rem; line-height: 1.7; }
+}
+
+/* Tablet tweaks */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .app { grid-template-columns: 190px 1fr; }
+  .ni { font-size: 0.78rem; }
+  .d-q { font-size: 1.35rem; }
+}
 </style>
 </head>
 <body>
 
 <header>
+  <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
   <div class="logo">Mon Professeur</div>
   <div class="header-right">
     <div class="level-badge" id="lvl-badge">NCLC 1 · Thème 1</div>
     <div class="exam-cd" id="cd"></div>
   </div>
 </header>
+
+<div class="sidebar-backdrop" id="sb-backdrop" onclick="toggleSidebar()"></div>
 
 <div class="app">
   <nav class="sidebar">
@@ -220,6 +433,17 @@ textarea::placeholder{color:var(--muted)}
     </div>
     <div class="div-l"></div>
     <div class="sb-s">
+      <div class="sb-lbl">Notes · Cours du 22/04</div>
+      <div class="lesson-note">
+        <strong>Demander des nouvelles :</strong> Comment s'est passée ta semaine ? (fém.) / ton entretien ? (masc.)<br><br>
+        <strong>se passer</strong> = to happen · <strong>passer qqch</strong> = to spend (time)<br><br>
+        <strong>Registres :</strong> C'était bien → C'est bien ! → Ma semaine s'est très bien passée !<br><br>
+        <strong>Opener :</strong> En fait, je voulais te demander si / comment / ce que…<br><br>
+        <strong>Casual :</strong> Qu'est-ce que tu as fait de beau ? → Je suis <em>allée</em>…
+      </div>
+    </div>
+    <div class="div-l"></div>
+    <div class="sb-s">
       <div class="sb-lbl">Notes · Cours du 15/04</div>
       <div class="lesson-note">
         <strong>Règle d'or :</strong> adjectif avec chaque nom, adverbe avec chaque verbe<br><br>
@@ -241,18 +465,19 @@ textarea::placeholder{color:var(--muted)}
     <div class="view active" id="view-chat">
       <div class="chat-top">
         <div class="chat-ttl">Conversation libre &amp; correction TCF</div>
-        <div class="lesson-tag">Cours du 15/04 · Salutations</div>
+        <div class="lesson-tag">Cours du 22/04 · Demander des nouvelles</div>
       </div>
       <div class="chips">
-        <div class="chip gold" onclick="chip('Pratiquons le scénario du cours : Thomas Dupont et Julien Moreau se rencontrent par hasard près d\'un café à Lyon en fin d\'après-midi. Joue le rôle de Julien et commençons le dialogue. Corrige mes erreurs.')">🎭 Scénario cours : Thomas &amp; Julien</div>
-        <div class="chip gold" onclick="chip('Je vais me présenter comme Élise Morel à un cours de français pour adultes à Toulouse. Pose-moi les questions d\'un professeur en premier cours. Corrige mon français.')">🎭 Scénario : Se présenter (Élise)</div>
-        <div class="chip gold" onclick="chip('Pratiquons les adverbes de manière. Donne-moi 8 adjectifs et je dois former l\'adverbe correspondant. Commence.')">Adverbes de manière</div>
+        <div class="chip gold" onclick="chip('Pratiquons la conversation du cours du 22/04. Demande-moi comment s\'est passée ma semaine, puis on a un dialogue naturel. Corrige mes erreurs, surtout sur l\'accord de passé/passée selon le genre.')">🎭 Demander des nouvelles (22/04)</div>
+        <div class="chip gold" onclick="chip('Drillons la différence entre passer quelque chose vs se passer. Donne-moi 6 phrases à compléter et corrige-moi.')">passer vs se passer</div>
+        <div class="chip gold" onclick="chip('Pratiquons le scénario du cours : Thomas Dupont et Julien Moreau se rencontrent par hasard près d\'un café à Lyon en fin d\'après-midi. Joue le rôle de Julien et commençons le dialogue. Corrige mes erreurs.')">🎭 Thomas &amp; Julien (15/04)</div>
+        <div class="chip gold" onclick="chip('Je vais me présenter comme Élise Morel à un cours de français pour adultes à Toulouse. Pose-moi les questions d\'un professeur en premier cours. Corrige mon français.')">🎭 Se présenter (Élise)</div>
+        <div class="chip" onclick="chip('Pratiquons les adverbes de manière. Donne-moi 8 adjectifs et je dois former l\'adverbe correspondant. Commence.')">Adverbes de manière</div>
         <div class="chip" onclick="chip('Explique-moi la différence entre parce que, car, comme et puisque avec des exemples.')">Parce que / car / puisque</div>
         <div class="chip" onclick="chip('Explique-moi les pronoms relatifs qui, que, dont, où, lequel, duquel, auquel avec des exemples simples.')">Pronoms relatifs</div>
         <div class="chip" onclick="chip('Explique-moi l\'accord du participe passé : avec être, avec avoir, et les verbes réfléchis. Donne des exemples pour chaque règle.')">Accord participe passé</div>
         <div class="chip" onclick="chip('Corrige mon français comme un examinateur TCF. Je vais écrire un paragraphe.')">Correction TCF</div>
         <div class="chip" onclick="chip('Pose-moi une question d\'expression orale typique du TCF Canada niveau B1-B2. Je dois décrire, donner mon opinion, et argumenter.')">Question orale TCF</div>
-        <div class="chip" onclick="chip('Explique-moi la différence entre l\'indicatif, le conditionnel et le subjonctif avec des exemples simples.')">Indicatif/Conditionnel/Subjonctif</div>
       </div>
       <div class="messages" id="msgs"></div>
       <div class="input-area">
@@ -270,7 +495,7 @@ textarea::placeholder{color:var(--muted)}
           <div class="dstat"><div class="dstat-n" id="ds-pct">—</div><div class="dstat-l">Score</div></div>
         </div>
         <div class="d-topics">
-          <button class="tbtn gold-btn active" data-t="lesson" onclick="pickTopic(this)">★ Cours 15/04</button>
+          <button class="tbtn gold-btn active" data-t="lesson" onclick="pickTopic(this)">★ Cours 22/04</button>
           <button class="tbtn" data-t="nclc1" onclick="pickTopic(this)">NCLC 1 · Identité</button>
           <button class="tbtn" data-t="nclc2" onclick="pickTopic(this)">NCLC 2 · Famille</button>
           <button class="tbtn" data-t="articles" onclick="pickTopic(this)">Articles / Partitifs</button>
@@ -358,6 +583,24 @@ textarea::placeholder{color:var(--muted)}
 const SYS = window.APP_CONTENT.SYS;
 
 // ══════════════════════════════════════════════════════════════
+// MOBILE SIDEBAR TOGGLE
+// ══════════════════════════════════════════════════════════════
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const bd = document.getElementById('sb-backdrop');
+  sb.classList.toggle('open');
+  bd.classList.toggle('show');
+}
+
+function closeSidebarOnMobile() {
+  if (window.innerWidth <= 768) {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('sb-backdrop').classList.remove('show');
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════
 // VOCAB
 // ══════════════════════════════════════════════════════════════
 const VOCAB = {
@@ -418,6 +661,7 @@ let currentTheme = 't1';
 // VIEW
 // ══════════════════════════════════════════════════════════════
 function showView(name, el) {
+  closeSidebarOnMobile();
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
   document.querySelectorAll('#nav-chat,#nav-drill,#nav-vocab,#nav-tcf').forEach(n => n.classList.remove('active'));
@@ -596,11 +840,15 @@ function resize(el) { el.style.height='auto'; el.style.height=Math.min(el.scroll
 // ══════════════════════════════════════════════════════════════
 addMsg('assistant', `Bonjour Diana ! Session du jour chargée.
 
-J'ai intégré tes **deux sessions avec ton tuteur** (31/03 et 15/04). Voici ce qui est nouveau :
+J'ai intégré tes **trois sessions** avec ton tuteur (31/03, 15/04, **22/04**). Nouveau aujourd'hui :
 
-**Cours du 15/04 :** la règle d'or (adjectif + nom, adverbe + verbe), les adverbes de manière (doux→doucement, gentil→*gentiment*, bref→*brièvement*), les connecteurs de cause (parce que / car / comme / puisque), et les 4 scénarios du Thème 1.
+**Cours du 22/04 — Demander des nouvelles :**
+- *Comment s'est passé**e** ta semaine ?* (fém.) vs *ton entretien ?* (masc.)
+- **se passer** (to happen) vs **passer qqch** (to spend/pass)
+- Les 3 niveaux : *C'était bien* → *C'est bien !* → *Ma semaine s'est très bien passée !*
+- Soft opener : *En fait, je voulais te demander si / comment / ce que…*
 
-Les drills **"Cours 15/04"** sont maintenant le premier onglet. Tu peux aussi pratiquer directement les scénarios Thomas &amp; Julien ou Élise avec les boutons en or ci-dessus.
+Les drills **"Cours 22/04"** sont maintenant le premier onglet. Le vocabulaire de ce cours est aussi dans l'onglet Vocabulaire.
 
 Par où tu veux commencer ?`);
 
