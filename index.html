@@ -1125,7 +1125,13 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!sidebar) return;
 
   function handleNavTap(ev) {
-    var item = ev.target.closest('.ni[data-view]');
+    var target = ev.target;
+    if (!target) return;
+    if (target.nodeType !== 1) {
+      target = target.parentElement;
+      if (!target) return;
+    }
+    var item = target.closest('.ni[data-view]');
     if (!item) return;
     ev.preventDefault();
     ev.stopPropagation();
